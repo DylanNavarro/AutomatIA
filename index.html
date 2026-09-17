@@ -562,10 +562,11 @@
     transform:translateZ(0);
   }
   .bg-brain svg{
-    width:min(126vh,110vw);height:auto;overflow:visible;
+    width:min(102vh,88vw);height:auto;overflow:visible;
+    transform:translateY(4.5%);   /* punto medio: centrado se iba arriba, 9% quedaba bajo */
   }
   .bg-brain .be-edge{
-    stroke:rgba(255,255,255,.2);stroke-width:2.6;fill:none;
+    stroke:rgba(255,255,255,.22);stroke-width:3.6;fill:none;
     stroke-linecap:round;stroke-linejoin:miter;
   }
   .bg-brain .bn rect{
@@ -644,8 +645,8 @@
     section.block{padding:140px 0 76px}
     .cta-sec{padding:84px 0}
     .cta-inner{padding:48px 30px;border-radius:24px}
-    .bg-brain svg{width:150vw}
-    .bg-brain .be-edge{stroke:rgba(255,255,255,.17)}
+    .bg-brain svg{width:124vw;transform:translateY(3.5%)}
+    .bg-brain .be-edge{stroke:rgba(255,255,255,.19);stroke-width:4}
   }
   /* ---- móvil ---- */
   @media(max-width:560px){
@@ -655,8 +656,8 @@
     section.block{padding:134px 0 66px}
     .cta-sec{padding:70px 0}
     .cta-inner{padding:40px 22px;border-radius:22px}
-    .bg-brain svg{width:205vw}
-    .bg-brain .be-edge{stroke-width:3.4;stroke:rgba(255,255,255,.15)}
+    .bg-brain svg{width:168vw;transform:translateY(2.5%)}
+    .bg-brain .be-edge{stroke-width:4.4;stroke:rgba(255,255,255,.17)}
     .bg-brain .bn rect{fill:rgba(255,255,255,.42)}
     /* menos carga de composición en pantallas pequeñas */
     body::after{animation:none;filter:blur(30px)}
@@ -728,6 +729,279 @@
   }
   @media(prefers-reduced-motion:reduce){
     .wa-fab::before{animation:none}
+  }
+
+
+  /* =====================================================================
+     ESCENA GUIADA POR SCROLL — de un mensaje a una venta cerrada
+     ===================================================================== */
+  .scene{position:relative;height:420vh}
+  .scene-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center}
+  .stage{
+    position:relative;
+    display:grid;grid-template-columns:1fr .7fr 1fr;
+    gap:0 34px;align-items:center;
+    min-height:460px;
+  }
+
+  /* ---- cables ---- */
+  .wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+  .wires .wire{
+    fill:none;stroke:rgba(255,120,140,.82);stroke-width:3.6;stroke-linecap:round;
+    stroke-dasharray:1000;stroke-dashoffset:1000;
+    filter:drop-shadow(0 0 9px rgba(255,30,60,.8));
+  }
+  .wires .w1{stroke-dashoffset:calc(1000 - 1000 * var(--w1,0))}
+  .wires .w2{stroke-dashoffset:calc(1000 - 1000 * var(--w2,0))}
+  .wires .w3{stroke-dashoffset:calc(1000 - 1000 * var(--w3,0))}
+
+  /* ---- entrada genérica de piezas ---- */
+  .stage [data-el]{opacity:0;transform:translateY(22px) scale(.97);
+    transition:opacity .5s ease, transform .6s var(--spring)}
+  .stage [data-el].on{opacity:1;transform:none}
+
+  /* ---- teléfono / chat ---- */
+  .phone{
+    position:relative;z-index:2;
+    padding:18px;border-radius:22px;
+    background:var(--glass-bg);
+    -webkit-backdrop-filter:blur(var(--blur)) saturate(155%);backdrop-filter:blur(var(--blur)) saturate(155%);
+    border:1px solid var(--glass-brd);box-shadow:var(--glass-sh);
+  }
+  .ph-head{display:flex;align-items:center;gap:11px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .ph-av{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:#fff;
+    background:linear-gradient(150deg,#FF3B55,#A30C1E)}
+  .ph-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;color:var(--ink)}
+  .ph-src{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint)}
+  .ph-live{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#4AE07F;display:flex;align-items:center;gap:6px}
+  .ph-live::before{content:"";width:6px;height:6px;border-radius:50%;background:#4AE07F;box-shadow:0 0 8px #4AE07F}
+
+  .msg{position:relative;max-width:86%;margin-bottom:10px;padding:11px 14px;border-radius:15px;font-size:14px;line-height:1.5}
+  .msg p{margin:0}
+  .msg-time{display:block;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-faint)}
+  .msg-time b{color:var(--red-soft);font-weight:600}
+  .msg-in{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-bottom-left-radius:5px;color:var(--ink)}
+  .msg-out{margin-left:auto;border-bottom-right-radius:5px;color:#fff;
+    background:linear-gradient(155deg,rgba(255,58,82,.5),rgba(163,12,30,.42));
+    border:1px solid rgba(255,132,150,.42)}
+  .msg-yes{margin-bottom:0}
+
+  .typing{display:flex;gap:5px;align-items:center;padding:12px 15px;width:fit-content;margin-bottom:10px;
+    border-radius:15px;border-bottom-left-radius:5px;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+  .typing i{width:6px;height:6px;border-radius:50%;background:var(--red-soft);opacity:.45;animation:tdot 1.3s infinite}
+  .typing i:nth-child(2){animation-delay:.18s}
+  .typing i:nth-child(3){animation-delay:.36s}
+  @keyframes tdot{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+
+
+  /* ---- slots: el contenido no reserva espacio hasta que aparece ---- */
+  .slot{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--spring)}
+  .slot > *{min-height:0;overflow:hidden}
+  .slot:has(> .on){grid-template-rows:1fr}
+  .col-out .card{display:grid;grid-template-rows:0fr;padding-top:0;padding-bottom:0;border-width:0;
+    transition:grid-template-rows .55s var(--spring), padding .45s ease, border-width .3s ease,
+               opacity .5s ease, transform .6s var(--spring)}
+  .col-out .card > *{grid-column:1;min-height:0;overflow:hidden}
+  .col-out .card.on{grid-template-rows:auto auto auto auto;padding-top:18px;padding-bottom:18px;border-width:1px}
+  .col-out .card.action.on{grid-template-rows:auto auto auto}
+
+  /* ---- núcleo IA ---- */
+  .col-ai{display:flex;flex-direction:column;align-items:center;gap:20px;z-index:2}
+  .ai{position:relative;width:132px;height:132px;display:flex;align-items:center;justify-content:center}
+  .ai-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,120,140,.3)}
+  .ai-ring.r2{inset:14px;border-color:rgba(255,120,140,.22)}
+  .ai-ring.r3{inset:28px;border-color:rgba(255,120,140,.16)}
+  .ai-core{
+    position:relative;z-index:2;width:66px;height:66px;border-radius:20px;
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    background:linear-gradient(155deg,rgba(255,255,255,.14),rgba(255,30,60,.14));
+    -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 18px 40px -20px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.3);
+    transition:box-shadow .5s ease, border-color .5s ease, transform .6s var(--spring);
+  }
+  .ai-core svg{width:30px;height:30px}
+  .ai-dots{position:absolute;bottom:-4px;display:flex;gap:5px;opacity:0;transition:opacity .4s ease}
+  .ai-dots i{width:5px;height:5px;border-radius:50%;background:var(--red-soft)}
+
+  /* estado: pensando */
+  .stage[data-stage="2"] .ai-ring,
+  .stage[data-stage="3"] .ai-ring{animation:aiSpin 3.2s linear infinite}
+  .stage[data-stage="2"] .ai-ring.r2,
+  .stage[data-stage="3"] .ai-ring.r2{animation-direction:reverse;animation-duration:2.4s}
+  .stage[data-stage="2"] .ai-ring,
+  .stage[data-stage="3"] .ai-ring{border-color:rgba(255,30,60,.6);border-top-color:transparent;border-left-color:transparent}
+  .stage[data-stage="2"] .ai-core,
+  .stage[data-stage="3"] .ai-core{
+    box-shadow:0 0 0 1px rgba(255,80,105,.5), 0 20px 50px -18px rgba(255,30,60,.8), inset 0 1px 0 rgba(255,255,255,.4);
+    transform:scale(1.06);
+  }
+  .stage[data-stage="2"] .ai-dots,
+  .stage[data-stage="3"] .ai-dots{opacity:1}
+  .stage[data-stage="2"] .ai-dots i,
+  .stage[data-stage="3"] .ai-dots i{animation:tdot 1.2s infinite}
+  .stage[data-stage="2"] .ai-dots i:nth-child(2),
+  .stage[data-stage="3"] .ai-dots i:nth-child(2){animation-delay:.16s}
+  .stage[data-stage="2"] .ai-dots i:nth-child(3),
+  .stage[data-stage="3"] .ai-dots i:nth-child(3){animation-delay:.32s}
+  @keyframes aiSpin{to{transform:rotate(360deg)}}
+
+  /* estado: resuelto */
+  .stage:not([data-stage="0"]):not([data-stage="1"]):not([data-stage="2"]):not([data-stage="3"]) .ai-core{
+    border-color:rgba(255,132,150,.55);
+    box-shadow:0 0 0 1px rgba(255,80,105,.35), 0 18px 46px -20px rgba(255,30,60,.6), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+
+  .ai-label{position:relative;height:18px;text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-faint);letter-spacing:.04em}
+  .ai-label span{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;opacity:0;transition:opacity .4s ease}
+  .stage[data-stage="2"] .al-think,.stage[data-stage="3"] .al-think{opacity:1}
+  .stage[data-stage="4"] .al-done,.stage[data-stage="5"] .al-done,.stage[data-stage="6"] .al-done{opacity:1;color:var(--red-soft)}
+
+  /* ---- tarjetas de resultado ---- */
+  .col-out{display:flex;flex-direction:column;gap:16px;z-index:2}
+  .card{
+    padding:18px 20px;border-radius:18px;
+    background:var(--glass-bg);
+    -webkit-backdrop-filter:blur(var(--blur)) saturate(155%);backdrop-filter:blur(var(--blur)) saturate(155%);
+    border:1px solid var(--glass-brd);box-shadow:var(--glass-sh);
+  }
+  .c-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .c-k{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .c-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;
+    padding:4px 9px;border-radius:6px;border:1px solid var(--glass-brd);color:var(--ink-mut)}
+  .c-badge.hot{color:#fff;border-color:rgba(255,80,105,.6);background:linear-gradient(150deg,rgba(255,58,82,.55),rgba(163,12,30,.4))}
+  .meter{height:7px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:12px}
+  .meter-fill{display:block;height:100%;width:calc(var(--score,0) * 1%);border-radius:99px;
+    background:linear-gradient(90deg,#FF6076,#FF1E3C);
+    box-shadow:0 0 14px rgba(255,30,60,.7);
+    transition:width .9s cubic-bezier(.22,.8,.3,1)}
+  .c-row{display:flex;align-items:baseline;justify-content:space-between;font-size:14px;color:var(--ink-mut)}
+  .score-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;color:var(--red);line-height:1;
+    text-shadow:0 0 22px rgba(255,30,60,.55)}
+  .score-num small{font-size:.5em;margin-left:1px}
+  .c-why{list-style:none;display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+  .c-why li{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-mut);
+    padding:4px 9px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+
+  .act-row{display:flex;align-items:center;gap:12px;padding:9px 0}
+  .act-row + .act-row{border-top:1px solid rgba(255,255,255,.09)}
+  .act-ic{width:36px;height:36px;border-radius:11px;flex:none;display:flex;align-items:center;justify-content:center;
+    color:var(--red-soft);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+  .act-ic svg{width:18px;height:18px}
+  .act-t{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;color:var(--ink)}
+  .act-s{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-faint)}
+
+  /* ---- ticket final ---- */
+  .ticket{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-40%) scale(.92);
+    width:min(560px,92%);z-index:5;
+    padding:20px 24px 18px;border-radius:20px;
+    background:linear-gradient(155deg, rgba(255,58,82,.3) 0%, rgba(225,19,41,.22) 48%, rgba(20,8,9,.5) 100%);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+    border:1px solid rgba(255,132,150,.45);
+    box-shadow:0 34px 90px -34px rgba(255,30,60,.75), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .stage [data-el].on.ticket{transform:translate(-50%,-50%) scale(1)}
+  /* al cerrarse la venta, todo lo demás pasa a segundo plano */
+  .stage .col{transition:opacity .6s ease, filter .6s ease}
+  .stage[data-stage="6"] .col{opacity:.22;filter:blur(2.5px)}
+  .stage[data-stage="6"] .wires{opacity:.25;transition:opacity .6s ease}
+  .tk-top{display:flex;justify-content:space-between;align-items:center;
+    padding-bottom:12px;margin-bottom:14px;border-bottom:1px dashed rgba(255,255,255,.28)}
+  .tk-brand{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;color:#fff;letter-spacing:.01em}
+  .tk-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.62)}
+  .tk-mid{display:flex;align-items:center;gap:14px}
+  .tk-check{width:42px;height:42px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    color:#fff;background:linear-gradient(150deg,#FF3B55,#A30C1E);
+    box-shadow:0 0 0 4px rgba(255,30,60,.18), 0 10px 24px -10px rgba(255,30,60,.9)}
+  .tk-check svg{width:21px;height:21px}
+  .tk-t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#fff;line-height:1.15}
+  .tk-s{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(255,255,255,.7);margin-top:3px}
+  .tk-stamp{
+    margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.18em;
+    color:#fff;padding:7px 12px;border-radius:8px;
+    border:1.5px solid rgba(255,255,255,.55);
+    transform:rotate(-7deg);
+    opacity:0;
+  }
+  .stage [data-el].on .tk-stamp{animation:stamp .5s .35s var(--spring) forwards}
+  @keyframes stamp{
+    0%{opacity:0;transform:rotate(-7deg) scale(1.9)}
+    100%{opacity:1;transform:rotate(-7deg) scale(1)}
+  }
+  .tk-perf{display:flex;gap:20px;flex-wrap:wrap;margin:16px 0 12px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.66)}
+  .tk-perf b{color:#fff;font-size:13px;font-weight:700}
+  .tk-foot{padding-top:12px;border-top:1px dashed rgba(255,255,255,.28);
+    font-size:12.5px;letter-spacing:.06em;color:rgba(255,255,255,.88);text-align:center}
+  .tk-arrow{color:var(--red-soft);font-weight:700;margin:0 2px}
+
+  /* ---- indicador de pasos ---- */
+  .scene-steps{list-style:none;display:flex;justify-content:center;gap:0;margin-top:40px;counter-reset:s}
+  .scene-steps li{
+    position:relative;flex:1;max-width:120px;text-align:center;padding-top:16px;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;
+    color:var(--ink-faint);transition:color .4s ease;
+  }
+  .scene-steps li::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.1);
+  }
+  .scene-steps li::after{
+    content:"";position:absolute;top:0;left:0;height:2px;width:0;background:var(--red);
+    box-shadow:0 0 10px var(--red);transition:width .45s ease;
+  }
+  .scene-steps li.done::after{width:100%}
+  .scene-steps li.done{color:var(--ink)}
+
+  /* ---- tablet / móvil ---- */
+  @media(max-width:920px){
+    /* en pantallas chicas la escena no se fija: el contenido sube y cada
+       pieza aparece al entrar en pantalla (el stage no cabe en 100vh) */
+    .scene{height:auto}
+    .scene-sticky{position:static;height:auto;min-height:0;padding:0}
+    .stage[data-stage="6"] .col{opacity:1;filter:none}
+    /* el alto se reserva desde el inicio: si la escena creciera al aparecer
+       cada pieza, el progreso del scroll se recalcularía y parpadearía */
+    .stage{grid-template-columns:1fr;gap:22px;min-height:1290px;align-content:start}
+    .wires{display:none}
+    .col-ai{order:2}
+    .col-out{order:3}
+    .ticket{position:relative;left:auto;bottom:auto;width:100%;
+      transform:translateY(22px) scale(.96);order:4}
+    .stage [data-el].on.ticket{transform:none}
+    .ai{width:104px;height:104px}
+    .ai-core{width:56px;height:56px;border-radius:17px}
+    .ai-core svg{width:26px;height:26px}
+    .scene-steps{margin-top:26px;gap:4px}
+    .scene-steps li{font-size:9px;padding-top:12px}
+  }
+  @media(max-width:560px){
+    .stage{min-height:1250px}
+    .tk-mid{flex-wrap:wrap}
+    .tk-stamp{margin-left:0;margin-top:12px;transform:rotate(-5deg)}
+    .stage [data-el].on .tk-stamp{animation-name:stampM}
+    @keyframes stampM{0%{opacity:0;transform:rotate(-5deg) scale(1.9)}100%{opacity:1;transform:rotate(-5deg) scale(1)}}
+    .msg{max-width:94%;font-size:13.5px}
+    .tk-t{font-size:17px}
+    .tk-stamp{font-size:10px;letter-spacing:.12em;padding:6px 9px}
+    .tk-perf{gap:14px}
+    .scene-steps li:nth-child(even){display:none}
+  }
+
+  /* ---- sin JS o con movimiento reducido: todo visible ---- */
+  html:not(.scene-js) .stage [data-el]{opacity:1;transform:none}
+  html:not(.scene-js) .wires .wire{stroke-dashoffset:0}
+  html:not(.scene-js) .meter-fill{width:92%}
+  html:not(.scene-js) .scene{height:auto}
+  html:not(.scene-js) .scene-sticky{position:static;height:auto;padding:0}
+  @media(prefers-reduced-motion:reduce){
+    .scene{height:auto}
+    .scene-sticky{position:static;height:auto;padding:0}
+    .stage [data-el]{opacity:1;transform:none}
+    .ticket{position:relative;left:auto;bottom:auto;transform:none;width:100%;margin-top:22px}
   }
 
 </style>
@@ -868,38 +1142,149 @@
     <div class="sec-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
       <span class="eyebrow" style="justify-content:center">El sistema en acción</span>
       <h2>De un mensaje a una <span class="r">venta cerrada</span></h2>
-      <p style="margin:0 auto">Así trabaja tu negocio mientras tú haces otra cosa. Cada paso ocurre automáticamente.</p>
+      <p style="margin:0 auto">Así trabaja tu negocio mientras tú haces otra cosa. Baja y míralo ocurrir.</p>
     </div>
-    <div class="flow reveal">
-      <div class="flow-head">
-        <span class="flow-dot"></span><span class="flow-dot"></span><span class="flow-dot"></span>
-        <span class="flow-title">flujo_de_ventas.automatia</span>
-        <span class="flow-live">en vivo</span>
-      </div>
-      <div>
-        <div class="node">
-          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6076" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
-          <div class="n-body"><div class="n-t">Cliente escribe por Instagram</div><div class="n-s">"¿Cuánto cuesta?"</div></div>
-          <span class="n-tag">entrada</span>
+  </div>
+
+  <!-- ===== Escena guiada por scroll ===== -->
+  <div class="scene" id="scene">
+    <div class="scene-sticky">
+      <div class="wrap">
+        <div class="stage" id="stage" data-stage="0">
+
+          <!-- cables (escritorio) -->
+          <svg class="wires" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
+            <path class="wire w1" d="M250,150 C360,150 380,210 470,210"/>
+            <path class="wire w2" d="M530,210 C620,210 640,150 750,150"/>
+            <path class="wire w3" d="M530,230 C620,230 640,300 750,300"/>
+          </svg>
+
+          <!-- ---------- columna cliente ---------- -->
+          <div class="col col-chat">
+            <div class="phone">
+              <div class="ph-head">
+                <span class="ph-av">C</span>
+                <div>
+                  <div class="ph-name">Camila R.</div>
+                  <div class="ph-src">Instagram · DM</div>
+                </div>
+                <span class="ph-live">en línea</span>
+              </div>
+
+              <div class="slot"><div class="msg msg-in" data-el="in">
+                <p>Hola! vi su publicación 👀 ¿Cuánto cuesta?</p>
+                <span class="msg-time">21:47</span>
+              </div></div>
+
+              <div class="slot"><div class="typing" data-el="typing"><i></i><i></i><i></i></div></div>
+
+              <div class="slot"><div class="msg msg-out" data-el="out">
+                <p>¡Hola Camila! El plan parte en $149.990/mes e incluye la secretaria IA 24/7. ¿Te agendo una demo mañana a las 11:00?</p>
+                <span class="msg-time">21:47 · <b>respondido en 4s</b></span>
+              </div></div>
+
+              <div class="slot"><div class="msg msg-in msg-yes" data-el="yes">
+                <p>Sí, perfecto 🙌</p>
+                <span class="msg-time">21:48</span>
+              </div></div>
+            </div>
+          </div>
+
+          <!-- ---------- núcleo IA ---------- -->
+          <div class="col col-ai">
+            <div class="ai">
+              <span class="ai-ring r1"></span>
+              <span class="ai-ring r2"></span>
+              <span class="ai-ring r3"></span>
+              <span class="ai-core">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                  <rect x="4" y="8" width="16" height="12" rx="3"/>
+                  <path d="M12 8V4M9 2h6"/>
+                  <circle cx="9" cy="14" r="1.1" fill="currentColor" stroke="none"/>
+                  <circle cx="15" cy="14" r="1.1" fill="currentColor" stroke="none"/>
+                </svg>
+              </span>
+              <span class="ai-dots"><i></i><i></i><i></i></span>
+            </div>
+            <div class="ai-label" data-el="ailabel">
+              <span class="al-think">analizando el mensaje…</span>
+              <span class="al-done">intención de compra detectada</span>
+            </div>
+          </div>
+
+          <!-- ---------- columna resultados ---------- -->
+          <div class="col col-out">
+
+            <div class="card score" data-el="score">
+              <div class="c-head"><span class="c-k">Calificación del lead</span><span class="c-badge hot">CALIENTE</span></div>
+              <div class="meter"><span class="meter-fill"></span></div>
+              <div class="c-row"><span>Nivel de interés</span><b class="score-num">92<small>%</small></b></div>
+              <ul class="c-why">
+                <li>pregunta por precio</li>
+                <li>responde en menos de 1 min</li>
+                <li>acepta demo</li>
+              </ul>
+            </div>
+
+            <div class="card action" data-el="action">
+              <div class="c-head"><span class="c-k">Acción automática</span><span class="c-badge">auto</span></div>
+              <div class="act-row">
+                <span class="act-ic">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                </span>
+                <div>
+                  <div class="act-t">Demo agendada</div>
+                  <div class="act-s">mañana · 11:00 · Google Calendar</div>
+                </div>
+              </div>
+              <div class="act-row">
+                <span class="act-ic">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg>
+                </span>
+                <div>
+                  <div class="act-t">Cotización enviada</div>
+                  <div class="act-s">PDF al WhatsApp de Camila</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ---------- ticket final ---------- -->
+          <div class="ticket" data-el="ticket">
+            <div class="tk-top">
+              <span class="tk-brand">AutomatIA</span>
+              <span class="tk-id">#AU-2291</span>
+            </div>
+            <div class="tk-mid">
+              <span class="tk-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </span>
+              <div>
+                <div class="tk-t">Venta cerrada</div>
+                <div class="tk-s">Plan Básico · $149.990/mes</div>
+              </div>
+              <span class="tk-stamp">APROBADO</span>
+            </div>
+            <div class="tk-perf">
+              <span><b>4s</b> respuesta</span>
+              <span><b>11 min</b> a cierre</span>
+              <span><b>0</b> intervención</span>
+            </div>
+            <div class="tk-foot mono">lead <span class="tk-arrow">→</span> cliente · sin intervención</div>
+          </div>
+
         </div>
-        <div class="connector c1"><span class="spark"></span></div>
-        <div class="node">
-          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6076" stroke-width="1.8"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4M9 2h6"/><circle cx="9" cy="14" r="1" fill="#FF6076"/><circle cx="15" cy="14" r="1" fill="#FF6076"/></svg></span>
-          <div class="n-body"><div class="n-t">La IA responde y califica</div><div class="n-s">detecta intención de compra</div></div>
-          <span class="n-tag tag-red">IA</span>
-        </div>
-        <div class="connector c2"><span class="spark"></span></div>
-        <div class="node">
-          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6076" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
-          <div class="n-body"><div class="n-t">Agenda la cita o envía cotización</div><div class="n-s">sincroniza con tu calendario</div></div>
-          <span class="n-tag tag-red">auto</span>
-        </div>
-        <div class="connector c3"><span class="spark"></span></div>
-        <div class="node is-win">
-          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#FF1E3C" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>
-          <div class="n-body"><div class="n-t">Venta cerrada</div><div class="n-s">lead → cliente, sin intervención</div></div>
-          <span class="n-tag tag-red">+ $</span>
-        </div>
+
+        <!-- progreso -->
+        <ol class="scene-steps" id="sceneSteps">
+          <li data-s="1">Mensaje</li>
+          <li data-s="2">IA</li>
+          <li data-s="3">Respuesta</li>
+          <li data-s="4">Calificación</li>
+          <li data-s="5">Acción</li>
+          <li data-s="6">Cierre</li>
+        </ol>
       </div>
     </div>
   </div>
@@ -1117,7 +1502,7 @@
     document.documentElement.style.setProperty('--redveil', (1 - Math.min(y / 900, 1) * 0.92).toFixed(3));
     if(bgStage && !reduce){
       const p = Math.min(y / 1400, 1);
-      bgStage.style.transform = `translateY(${-y * 0.045}px) rotate(${p * 3.5}deg) scale(${1 + p*0.10})`;
+      bgStage.style.transform = `translateY(${y * 0.005}px) rotate(${p * 3}deg) scale(${1 + p*0.08})`;
     }
     ticking = false;
   }
@@ -1301,7 +1686,7 @@
   let ticking = false;
 
   function sync(){
-    const max = (document.documentElement.scrollHeight - window.innerHeight) * 0.72;
+    const max = (document.documentElement.scrollHeight - window.innerHeight) * 0.5;
     const p = clamp(window.scrollY / (max || 1));
     lines.seek(total * p);
     ticking = false;
@@ -1321,6 +1706,92 @@
       cta.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
     }, {passive:true});
   }
+})();
+</script>
+
+<script>
+/* ===== Escena "de un mensaje a una venta cerrada", guiada por el scroll ===== */
+(function(){
+  var scene = document.getElementById('scene');
+  var stage = document.getElementById('stage');
+  if(!scene || !stage) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  document.documentElement.classList.add('scene-js');
+
+  var el = {};
+  ['in','typing','out','yes','score','action','ticket'].forEach(function(k){
+    el[k] = stage.querySelector('[data-el="'+k+'"]');
+  });
+  var steps = Array.prototype.slice.call(document.querySelectorAll('#sceneSteps li'));
+
+  /* umbral de aparición de cada pieza, en progreso 0→1 */
+  var MARKS = [
+    {k:'in',     at:0.06},
+    {k:'typing', at:0.20, off:0.46},   // desaparece cuando llega la respuesta
+    {k:'out',    at:0.46},
+    {k:'score',  at:0.58},
+    {k:'yes',    at:0.68},
+    {k:'action', at:0.74},
+    {k:'ticket', at:0.90}
+  ];
+
+  /* tramos en los que se dibuja cada cable */
+  function seg(p, a, b){ return p <= a ? 0 : (p >= b ? 1 : (p - a) / (b - a)); }
+
+  var clamp = function(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); };
+  var ticking = false;
+  var lastStage = -1;
+  var lastScore = -1;
+  var scoreNum = stage.querySelector('.score-num');
+
+  function render(){
+    var r = scene.getBoundingClientRect();
+    var total = r.height - window.innerHeight;
+    var p = clamp(total > 0 ? (-r.top) / total : 0);
+
+    /* piezas */
+    MARKS.forEach(function(m){
+      var node = el[m.k];
+      if(!node) return;
+      var on = p >= m.at && (m.off === undefined || p < m.off);
+      node.classList.toggle('on', on);
+    });
+
+    /* cables: cliente→IA, IA→calificación, IA→acción */
+    stage.style.setProperty('--w1', seg(p, 0.16, 0.34).toFixed(3));
+    stage.style.setProperty('--w2', seg(p, 0.52, 0.66).toFixed(3));
+    stage.style.setProperty('--w3', seg(p, 0.70, 0.84).toFixed(3));
+
+    /* barra de interés (el número cuenta junto con la barra) */
+    var sc = seg(p, 0.58, 0.72) * 92;
+    stage.style.setProperty('--score', sc.toFixed(1));
+    if(scoreNum){
+      var v = Math.round(sc);
+      if(v !== lastScore){ scoreNum.firstChild.nodeValue = v; lastScore = v; }
+    }
+
+    /* estado del núcleo + pasos */
+    var st = p < 0.06 ? 0
+           : p < 0.20 ? 1
+           : p < 0.34 ? 2
+           : p < 0.46 ? 3
+           : p < 0.58 ? 4
+           : p < 0.90 ? 5
+           : 6;
+    if(st !== lastStage){
+      stage.setAttribute('data-stage', st);
+      steps.forEach(function(li, i){ li.classList.toggle('done', st >= i + 1); });
+      lastStage = st;
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function(){
+    if(!ticking){ requestAnimationFrame(render); ticking = true; }
+  }, {passive:true});
+  window.addEventListener('resize', render, {passive:true});
+  render();
 })();
 </script>
 
