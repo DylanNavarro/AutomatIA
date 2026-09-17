@@ -564,6 +564,7 @@
   .bg-brain svg{
     width:min(102vh,88vw);height:auto;overflow:visible;
     transform:translateY(4.5%);   /* punto medio: centrado se iba arriba, 9% quedaba bajo */
+    filter:blur(8px);
   }
   .bg-brain .be-edge{
     stroke:rgba(255,255,255,.22);stroke-width:3.6;fill:none;
@@ -645,7 +646,7 @@
     section.block{padding:140px 0 76px}
     .cta-sec{padding:84px 0}
     .cta-inner{padding:48px 30px;border-radius:24px}
-    .bg-brain svg{width:124vw;transform:translateY(3.5%)}
+    .bg-brain svg{width:124vw;transform:translateY(3.5%);filter:blur(6.5px)}
     .bg-brain .be-edge{stroke:rgba(255,255,255,.19);stroke-width:4}
   }
   /* ---- móvil ---- */
@@ -656,7 +657,7 @@
     section.block{padding:134px 0 66px}
     .cta-sec{padding:70px 0}
     .cta-inner{padding:40px 22px;border-radius:22px}
-    .bg-brain svg{width:168vw;transform:translateY(2.5%)}
+    .bg-brain svg{width:168vw;transform:translateY(2.5%);filter:blur(5px)}
     .bg-brain .be-edge{stroke-width:4.4;stroke:rgba(255,255,255,.17)}
     .bg-brain .bn rect{fill:rgba(255,255,255,.42)}
     /* menos carga de composición en pantallas pequeñas */
@@ -735,7 +736,7 @@
   /* =====================================================================
      ESCENA GUIADA POR SCROLL — de un mensaje a una venta cerrada
      ===================================================================== */
-  .scene{position:relative;height:620vh}
+  .scene{position:relative;height:820vh}
   .scene-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center}
   .stage{
     position:relative;
@@ -747,13 +748,9 @@
   /* ---- cables ---- */
   .wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
   .wires .wire{
-    fill:none;stroke:rgba(255,120,140,.82);stroke-width:3.6;stroke-linecap:round;
-    stroke-dasharray:1000;stroke-dashoffset:1000;
-    filter:drop-shadow(0 0 9px rgba(255,30,60,.8));
+    fill:none;stroke:rgba(255,120,140,.88);stroke-width:8;stroke-linecap:round;
+    filter:drop-shadow(0 0 16px rgba(255,30,60,.85));
   }
-  .wires .w1{stroke-dashoffset:calc(1000 - 1000 * var(--w1,0))}
-  .wires .w2{stroke-dashoffset:calc(1000 - 1000 * var(--w2,0))}
-  .wires .w3{stroke-dashoffset:calc(1000 - 1000 * var(--w3,0))}
 
   /* ---- entrada genérica de piezas ---- */
   .stage [data-el]{opacity:0;transform:translateY(22px) scale(.97);
@@ -771,7 +768,7 @@
   .ph-head{display:flex;align-items:center;gap:11px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,.1)}
   .ph-av{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
     font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:#fff;
-    background:linear-gradient(150deg,#FF3B55,#A30C1E)}
+    background:linear-gradient(150deg,#4AE07F,#128C7E)}
   .ph-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;color:var(--ink)}
   .ph-src{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint)}
   .ph-live{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#4AE07F;display:flex;align-items:center;gap:6px}
@@ -781,16 +778,33 @@
   .msg p{margin:0}
   .msg-time{display:block;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-faint)}
   .msg-time b{color:var(--red-soft);font-weight:600}
-  .msg-in{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-bottom-left-radius:5px;color:var(--ink)}
-  .msg-out{margin-left:auto;border-bottom-right-radius:5px;color:#fff;
-    background:linear-gradient(155deg,rgba(255,58,82,.5),rgba(163,12,30,.42));
-    border:1px solid rgba(255,132,150,.42)}
+  /* burbujas al estilo WhatsApp, en vidrio */
+  .msg-in{
+    border-bottom-left-radius:5px;color:#15221b;
+    background:linear-gradient(155deg, rgba(255,255,255,.92), rgba(240,246,242,.78));
+    -webkit-backdrop-filter:blur(12px) saturate(150%);backdrop-filter:blur(12px) saturate(150%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 10px 26px -16px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .msg-out{
+    margin-left:auto;border-bottom-right-radius:5px;color:#0e2417;
+    background:linear-gradient(155deg, rgba(219,252,211,.92), rgba(178,238,168,.76));
+    -webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);
+    border:1px solid rgba(228,255,222,.6);
+    box-shadow:0 12px 30px -16px rgba(37,211,102,.55), inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  .msg-in .msg-time{color:#5d6f64}
+  .msg-out .msg-time{color:#4a6b52;display:flex;align-items:center;gap:6px;justify-content:flex-end}
+  .msg-out .msg-time b{color:#1d6b3a}
+  .ticks{width:15px;height:10px;flex:none;color:#53BDEB}
   .msg-yes{margin-bottom:0}
 
   .typing{display:flex;gap:5px;align-items:center;padding:12px 15px;width:fit-content;margin-bottom:10px;
     border-radius:15px;border-bottom-left-radius:5px;
-    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
-  .typing i{width:6px;height:6px;border-radius:50%;background:var(--red-soft);opacity:.45;animation:tdot 1.3s infinite}
+    background:linear-gradient(155deg, rgba(255,255,255,.8), rgba(240,246,242,.62));
+    -webkit-backdrop-filter:blur(12px) saturate(150%);backdrop-filter:blur(12px) saturate(150%);
+    border:1px solid rgba(255,255,255,.5)}
+  .typing i{width:6px;height:6px;border-radius:50%;background:#7d9187;opacity:.5;animation:tdot 1.3s infinite}
   .typing i:nth-child(2){animation-delay:.18s}
   .typing i:nth-child(3){animation-delay:.36s}
   @keyframes tdot{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
@@ -959,7 +973,7 @@
 
   /* ---- tablet / móvil: escenario compacto, una tarjeta a la vez ---- */
   @media(max-width:920px){
-    .scene{height:520vh}
+    .scene{height:680vh}
     .scene-sticky{height:100dvh;height:100vh;align-items:center;padding:0}
     .wires{display:none}
 
@@ -1024,7 +1038,7 @@
   }
 
   @media(max-width:560px){
-    .scene{height:480vh}
+    .scene{height:620vh}
     .stage{padding-top:104px}
     .phone{max-height:38dvh;max-height:38vh}
     .msg{max-width:94%;font-size:13px}
@@ -1201,10 +1215,10 @@
         <div class="stage" id="stage" data-stage="0">
 
           <!-- cables (escritorio) -->
-          <svg class="wires" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
-            <path class="wire w1" d="M250,150 C360,150 380,210 470,210"/>
-            <path class="wire w2" d="M530,210 C620,210 640,150 750,150"/>
-            <path class="wire w3" d="M530,230 C620,230 640,300 750,300"/>
+          <svg class="wires" id="wires" viewBox="0 0 1000 420" aria-hidden="true">
+            <path class="wire w1" d=""/>
+            <path class="wire w2" d=""/>
+            <path class="wire w3" d=""/>
           </svg>
 
           <!-- ---------- columna cliente ---------- -->
@@ -1214,7 +1228,7 @@
                 <span class="ph-av">C</span>
                 <div>
                   <div class="ph-name">Camila R.</div>
-                  <div class="ph-src">Instagram · DM</div>
+                  <div class="ph-src">WhatsApp</div>
                 </div>
                 <span class="ph-live">en línea</span>
               </div>
@@ -1229,7 +1243,10 @@
 
               <div class="slot"><div class="msg msg-out" data-el="out">
                 <p>¡Hola Camila! El plan parte en $149.990/mes e incluye la secretaria IA 24/7. ¿Te agendo una demo mañana a las 11:00?</p>
-                <span class="msg-time">21:47 · <b>respondido en 4s</b></span>
+                <span class="msg-time">21:47 · <b>respondido en 4s</b>
+                  <svg class="ticks" viewBox="0 0 18 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M1 6.2 4.1 9.4 10.2 1.6"/><path d="M7.4 6.2 10.5 9.4 16.6 1.6"/>
+                  </svg></span>
               </div></div>
 
               <div class="slot"><div class="msg msg-in msg-yes" data-el="yes">
@@ -1791,6 +1808,65 @@
 
   var clamp = function(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); };
   var ticking = false;
+
+  /* ---- los cables se calculan desde la posición real de cada pieza, así
+         nacen en el centro del núcleo de IA y mueren dentro de su tarjeta ---- */
+  var svg   = document.getElementById('wires');
+  var wires = svg ? Array.prototype.slice.call(svg.querySelectorAll('.wire')) : [];
+  var lens  = [0, 0, 0];
+
+  function box(sel, ref){
+    var e = stage.querySelector(sel);
+    if(!e) return null;
+    var r = e.getBoundingClientRect();
+    return {x:r.left - ref.left, y:r.top - ref.top, w:r.width, h:r.height};
+  }
+
+  function layoutWires(){
+    if(!svg || !wires.length) return;
+    var sr = stage.getBoundingClientRect();
+    if(sr.width < 10) return;
+    svg.setAttribute('viewBox', '0 0 ' + sr.width + ' ' + sr.height);
+
+    var phone  = box('.phone', sr);
+    var ai     = box('.ai', sr);
+    var score  = box('.score', sr);
+    var action = box('.action', sr);
+    if(!phone || !ai || !score || !action) return;
+
+    var cx = ai.x + ai.w / 2, cy = ai.y + ai.h / 2;   /* centro del núcleo */
+    var px = phone.x + phone.w, py = phone.y + phone.h * 0.42;
+
+    var d = [
+      'M' + px + ',' + py +
+        ' C' + (px + (cx - px) * 0.55) + ',' + py +
+        ' ' + (cx - (cx - px) * 0.45) + ',' + cy +
+        ' ' + cx + ',' + cy,
+      wireTo(cx, cy, score),
+      wireTo(cx, cy, action)
+    ];
+
+    wires.forEach(function(w, i){
+      w.setAttribute('d', d[i]);
+      lens[i] = w.getTotalLength();
+      w.style.strokeDasharray = lens[i];
+    });
+  }
+
+  function wireTo(cx, cy, t){
+    var tx = t.x + 26, ty = t.y + t.h / 2;            /* entra 26px dentro de la tarjeta */
+    return 'M' + cx + ',' + cy +
+           ' C' + (cx + (tx - cx) * 0.45) + ',' + cy +
+           ' ' + (tx - (tx - cx) * 0.4) + ',' + ty +
+           ' ' + tx + ',' + ty;
+  }
+
+  function drawWire(i, t){
+    var w = wires[i];
+    if(!w || !lens[i]) return;
+    w.style.strokeDashoffset = lens[i] * (1 - t);
+  }
+
   var lastStage = -1;
   var lastScore = -1;
   var scoreNum = stage.querySelector('.score-num');
@@ -1809,9 +1885,9 @@
     });
 
     /* cables: cliente→IA, IA→calificación, IA→acción */
-    stage.style.setProperty('--w1', seg(p, 0.16, 0.34).toFixed(3));
-    stage.style.setProperty('--w2', seg(p, 0.52, 0.66).toFixed(3));
-    stage.style.setProperty('--w3', seg(p, 0.70, 0.84).toFixed(3));
+    drawWire(0, seg(p, 0.16, 0.34));
+    drawWire(1, seg(p, 0.50, 0.62));   /* llega antes que la calificación */
+    drawWire(2, seg(p, 0.66, 0.78));   /* llega antes que la acción */
 
     /* barra de interés (el número cuenta junto con la barra) */
     var sc = seg(p, 0.58, 0.72) * 92;
@@ -1843,7 +1919,17 @@
   window.addEventListener('scroll', function(){
     if(!ticking){ requestAnimationFrame(render); ticking = true; }
   }, {passive:true});
-  window.addEventListener('resize', render, {passive:true});
+  window.addEventListener('resize', function(){ layoutWires(); render(); }, {passive:true});
+
+  /* el chat y las tarjetas cambian de alto al aparecer: reubicar los cables */
+  if(window.ResizeObserver){
+    var ro = new ResizeObserver(function(){ layoutWires(); render(); });
+    ['.phone', '.col-out'].forEach(function(sel){
+      var e = stage.querySelector(sel); if(e) ro.observe(e);
+    });
+  }
+
+  layoutWires();
   render();
 })();
 </script>
