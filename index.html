@@ -735,7 +735,7 @@
   /* =====================================================================
      ESCENA GUIADA POR SCROLL — de un mensaje a una venta cerrada
      ===================================================================== */
-  .scene{position:relative;height:420vh}
+  .scene{position:relative;height:620vh}
   .scene-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center}
   .stage{
     position:relative;
@@ -858,7 +858,8 @@
     font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-faint);letter-spacing:.04em}
   .ai-label span{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;opacity:0;transition:opacity .4s ease}
   .stage[data-stage="2"] .al-think,.stage[data-stage="3"] .al-think{opacity:1}
-  .stage[data-stage="4"] .al-done,.stage[data-stage="5"] .al-done,.stage[data-stage="6"] .al-done{opacity:1;color:var(--red-soft)}
+  .stage[data-stage="4"] .al-done,.stage[data-stage="5"] .al-done,
+  .stage[data-stage="6"] .al-done,.stage[data-stage="7"] .al-done{opacity:1;color:var(--red-soft)}
 
   /* ---- tarjetas de resultado ---- */
   .col-out{display:flex;flex-direction:column;gap:16px;z-index:2}
@@ -907,8 +908,8 @@
   .stage [data-el].on.ticket{transform:translate(-50%,-50%) scale(1)}
   /* al cerrarse la venta, todo lo demás pasa a segundo plano */
   .stage .col{transition:opacity .6s ease, filter .6s ease}
-  .stage[data-stage="6"] .col{opacity:.22;filter:blur(2.5px)}
-  .stage[data-stage="6"] .wires{opacity:.25;transition:opacity .6s ease}
+  .stage[data-stage="7"] .col{opacity:.22;filter:blur(2.5px)}
+  .stage[data-stage="7"] .wires{opacity:.25;transition:opacity .6s ease}
   .tk-top{display:flex;justify-content:space-between;align-items:center;
     padding-bottom:12px;margin-bottom:14px;border-bottom:1px dashed rgba(255,255,255,.28)}
   .tk-brand{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;color:#fff;letter-spacing:.01em}
@@ -956,38 +957,85 @@
   .scene-steps li.done::after{width:100%}
   .scene-steps li.done{color:var(--ink)}
 
-  /* ---- tablet / móvil ---- */
+  /* ---- tablet / móvil: escenario compacto, una tarjeta a la vez ---- */
   @media(max-width:920px){
-    /* en pantallas chicas la escena no se fija: el contenido sube y cada
-       pieza aparece al entrar en pantalla (el stage no cabe en 100vh) */
-    .scene{height:auto}
-    .scene-sticky{position:static;height:auto;min-height:0;padding:0}
-    .stage[data-stage="6"] .col{opacity:1;filter:none}
-    /* el alto se reserva desde el inicio: si la escena creciera al aparecer
-       cada pieza, el progreso del scroll se recalcularía y parpadearía */
-    .stage{grid-template-columns:1fr;gap:22px;min-height:1290px;align-content:start}
+    .scene{height:520vh}
+    .scene-sticky{height:100dvh;height:100vh;align-items:center;padding:0}
     .wires{display:none}
-    .col-ai{order:2}
-    .col-out{order:3}
-    .ticket{position:relative;left:auto;bottom:auto;width:100%;
-      transform:translateY(22px) scale(.96);order:4}
+
+    .stage{
+      grid-template-columns:1fr;
+      grid-template-rows:auto auto auto;
+      gap:14px;min-height:0;
+      align-content:center;
+      padding-top:96px;padding-bottom:8px;
+    }
+
+    /* el chat se comporta como un chat de verdad: alto fijo y los mensajes
+       nuevos empujan a los viejos fuera de cuadro por arriba */
+    .col-chat{grid-row:1;grid-column:1}
+    .phone{padding:14px;border-radius:18px;display:flex;flex-direction:column;max-height:42dvh;max-height:42vh}
+    .ph-head{flex:none;padding-bottom:10px;margin-bottom:10px}
+    .ph-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+    .msg{font-size:13.5px;padding:10px 13px;margin-bottom:8px}
+    .msg-time{margin-top:4px}
+
+    /* núcleo compacto entre el chat y el resultado */
+    .col-ai{grid-row:2;grid-column:1;flex-direction:row;gap:14px;justify-content:center}
+    .ai{width:74px;height:74px}
+    .ai-core{width:42px;height:42px;border-radius:14px}
+    .ai-core svg{width:21px;height:21px}
+    .ai-ring.r2{inset:9px}.ai-ring.r3{inset:18px}
+    .ai-label{height:auto;text-align:left;display:flex;align-items:center;min-width:150px}
+    .ai-label span{position:static;transform:none;white-space:normal;display:none}
+    .stage[data-stage="2"] .al-think,.stage[data-stage="3"] .al-think{display:block}
+    .stage[data-stage="4"] .al-done,.stage[data-stage="5"] .al-done,
+    .stage[data-stage="6"] .al-done,.stage[data-stage="7"] .al-done{display:block}
+
+    /* zona de resultado: las tarjetas se turnan en el mismo espacio */
+    .col-out{grid-row:3;grid-column:1;position:relative;min-height:236px}
+    .col-out .card{
+      position:absolute;left:0;right:0;top:0;
+      display:block;padding:16px 18px;border-width:1px;
+      transition:opacity .45s ease, transform .55s var(--spring);
+    }
+    .col-out .card > *{overflow:visible}
+    .c-why{margin-top:10px}
+    .c-why li{font-size:10px;padding:3px 8px}
+    .act-row{padding:7px 0}
+
+    /* el ticket cae en la misma celda del grid que las tarjetas */
+    .ticket{
+      grid-row:3;grid-column:1;align-self:start;
+      position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;
+      transform:translateY(18px) scale(.96);
+      padding:16px 18px 14px;border-radius:18px;z-index:6;
+    }
     .stage [data-el].on.ticket{transform:none}
-    .ai{width:104px;height:104px}
-    .ai-core{width:56px;height:56px;border-radius:17px}
-    .ai-core svg{width:26px;height:26px}
-    .scene-steps{margin-top:26px;gap:4px}
-    .scene-steps li{font-size:9px;padding-top:12px}
+    .stage[data-stage="7"] .col{opacity:1;filter:none}
+
+    /* sólo la pieza del momento queda a la vista */
+    .stage[data-stage="6"] .score,
+    .stage[data-stage="7"] .score,
+    .stage[data-stage="7"] .action{opacity:0;transform:translateY(-16px) scale(.96)}
+
+    .scene-steps{margin-top:18px;gap:4px}
+    .scene-steps li{font-size:9px;padding-top:10px;max-width:none}
   }
+
   @media(max-width:560px){
-    .stage{min-height:1250px}
+    .scene{height:480vh}
+    .stage{padding-top:104px}
+    .phone{max-height:38dvh;max-height:38vh}
+    .msg{max-width:94%;font-size:13px}
+    .col-out{min-height:224px}
+    .ai-label{min-width:0;font-size:10.5px}
     .tk-mid{flex-wrap:wrap}
-    .tk-stamp{margin-left:0;margin-top:12px;transform:rotate(-5deg)}
+    .tk-t{font-size:17px}
+    .tk-stamp{margin-left:0;margin-top:10px;font-size:10px;letter-spacing:.12em;padding:5px 9px;transform:rotate(-5deg)}
     .stage [data-el].on .tk-stamp{animation-name:stampM}
     @keyframes stampM{0%{opacity:0;transform:rotate(-5deg) scale(1.9)}100%{opacity:1;transform:rotate(-5deg) scale(1)}}
-    .msg{max-width:94%;font-size:13.5px}
-    .tk-t{font-size:17px}
-    .tk-stamp{font-size:10px;letter-spacing:.12em;padding:6px 9px}
-    .tk-perf{gap:14px}
+    .tk-perf{gap:12px;margin:12px 0 10px}
     .scene-steps li:nth-child(even){display:none}
   }
 
@@ -1171,6 +1219,7 @@
                 <span class="ph-live">en línea</span>
               </div>
 
+              <div class="ph-body">
               <div class="slot"><div class="msg msg-in" data-el="in">
                 <p>Hola! vi su publicación 👀 ¿Cuánto cuesta?</p>
                 <span class="msg-time">21:47</span>
@@ -1187,6 +1236,7 @@
                 <p>Sí, perfecto 🙌</p>
                 <span class="msg-time">21:48</span>
               </div></div>
+              </div>
             </div>
           </div>
 
@@ -1206,7 +1256,7 @@
               </span>
               <span class="ai-dots"><i></i><i></i><i></i></span>
             </div>
-            <div class="ai-label" data-el="ailabel">
+            <div class="ai-label">
               <span class="al-think">analizando el mensaje…</span>
               <span class="al-done">intención de compra detectada</span>
             </div>
@@ -1686,7 +1736,7 @@
   let ticking = false;
 
   function sync(){
-    const max = (document.documentElement.scrollHeight - window.innerHeight) * 0.5;
+    const max = (document.documentElement.scrollHeight - window.innerHeight) * 0.68;
     const p = clamp(window.scrollY / (max || 1));
     lines.seek(total * p);
     ticking = false;
@@ -1774,14 +1824,17 @@
     /* estado del núcleo + pasos */
     var st = p < 0.06 ? 0
            : p < 0.20 ? 1
-           : p < 0.34 ? 2
-           : p < 0.46 ? 3
-           : p < 0.58 ? 4
-           : p < 0.90 ? 5
-           : 6;
+           : p < 0.34 ? 2      /* la IA recibe y piensa */
+           : p < 0.46 ? 3      /* sigue pensando */
+           : p < 0.58 ? 4      /* responde */
+           : p < 0.74 ? 5      /* califica */
+           : p < 0.90 ? 6      /* actúa */
+           : 7;                /* cierra */
     if(st !== lastStage){
       stage.setAttribute('data-stage', st);
-      steps.forEach(function(li, i){ li.classList.toggle('done', st >= i + 1); });
+      /* Mensaje, IA, Respuesta, Calificación, Acción, Cierre */
+      var reached = [1, 2, 4, 5, 6, 7];
+      steps.forEach(function(li, i){ li.classList.toggle('done', st >= reached[i]); });
       lastStage = st;
     }
     ticking = false;
